@@ -103,7 +103,7 @@ header.top{
 .view.hidden-view{position:absolute; top:0; left:0; width:100%; opacity:0; transform:scale(.97); pointer-events:none;}
 .view.entering{opacity:0; transform:scale(1.03);}
 
-/* ===== HERO + CONTACT SIDEBAR (di atas) ===== */
+/* ===== HERO + CONTACT SIDEBAR ===== */
 .hero{min-height:100vh; padding:130px 6vw 80px; position:relative; display:flex; flex-direction:column; justify-content:center;}
 .hero-grid{
   display:grid; grid-template-columns:230px 1fr; gap:56px; align-items:start;
@@ -194,29 +194,11 @@ header.top{
 
 .skill-name{font-family:'JetBrains Mono',monospace; font-weight:600; font-size:13.5px; color:var(--ink); word-break:break-word;}
 
-.skill-remove{
-  position:absolute; top:10px; right:10px; width:22px; height:22px; border-radius:50%; border:none;
-  background:rgba(255,255,255,0.06); color:var(--dim);
-  display:flex; align-items:center; justify-content:center;
-  opacity:0; transition:opacity .2s ease, color .2s ease, background .2s ease;
-}
-.skill-card:hover .skill-remove{opacity:1;}
-.skill-remove:hover{color:var(--danger); background:rgba(255,107,107,0.14);}
-.skill-remove svg{width:11px; height:11px;}
-
 .skill-edit-hint{
   position:absolute; bottom:8px; font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.06em;
   color:var(--dimmer); text-transform:uppercase; opacity:0; transition:opacity .2s ease;
 }
 .skill-card:hover .skill-edit-hint{opacity:1;}
-
-.skill-card.add-card{
-  background:transparent; box-shadow:inset 0 0 0 1px rgba(255,255,255,0.06);
-  cursor:pointer; justify-content:center;
-}
-.skill-card.add-card:hover{background:var(--glass); box-shadow:inset 0 0 0 1px var(--neon-soft);}
-.skill-card.add-card .skill-icon-btn{background:transparent; color:var(--dim); pointer-events:none;}
-.skill-card.add-card:hover .skill-icon-btn{color:var(--neon-bright);}
 
 /* ===== ICON PICKER PANEL ===== */
 .picker-overlay{
@@ -394,7 +376,7 @@ footer .stamp{color:var(--neon-bright);}
   <section class="section" id="skills">
     <div class="section-head">
       <h2>Keahlian</h2>
-      <p>Setiap keahlian punya ikonnya sendiri — klik ikon untuk menggantinya, atau tambahkan keahlian baru lengkap dengan ikon pilihanmu.</p>
+      <p>Daftar keahlian utama dan teknologi yang dikuasai — klik ikon untuk menggantinya.</p>
     </div>
     <div class="skills-grid" id="skillsGrid"></div>
   </section>
@@ -455,12 +437,11 @@ footer .stamp{color:var(--neon-bright);}
   </section>
 </main>
 
-<!-- ============ ICON PICKER (dipakai untuk tambah & ganti ikon) ============ -->
+<!-- ============ ICON PICKER (hanya untuk ganti ikon) ============ -->
 <div class="picker-overlay" id="pickerOverlay">
   <div class="picker-panel">
     <h4 id="pickerTitle">Pilih Ikon</h4>
     <div class="picker-grid" id="pickerGrid"></div>
-    <input type="text" class="picker-input" id="pickerNameInput" placeholder="Nama keahlian (mis. Blender)" maxlength="26">
     <div class="picker-actions">
       <button class="btn" id="pickerCancel">Batal</button>
       <button class="btn primary" id="pickerConfirm">Simpan</button>
@@ -543,7 +524,7 @@ footer .stamp{color:var(--neon-bright);}
     return '<svg class="' + (extraClass||'') + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">' + inner + '</svg>';
   }
 
-  /* ---------- Skill data ---------- */
+  /* ---------- Skill data (Dikunci tanpa tombol hapus/tambah) ---------- */
   var skills = [
     {name:"3D Modeling", icon:"cube"},
     {name:"PHP",         icon:"tag"},
@@ -567,18 +548,9 @@ footer .stamp{color:var(--neon-bright);}
       card.innerHTML =
         '<button class="skill-icon-btn" data-edit="' + i + '" aria-label="Ganti ikon ' + escapeHtml(sk.name) + '">' + iconSVG(sk.icon) + '</button>' +
         '<span class="skill-name">' + escapeHtml(sk.name) + '</span>' +
-        '<button class="skill-remove" data-remove="' + i + '" aria-label="Hapus ' + escapeHtml(sk.name) + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M18 6 6 18M6 6l12 12"/></svg></button>' +
         '<span class="skill-edit-hint">klik ikon = ganti</span>';
       skillsGrid.appendChild(card);
     });
-
-    var addCard = document.createElement('div');
-    addCard.className = 'skill-card add-card';
-    addCard.id = 'addSkillCard';
-    addCard.innerHTML =
-      '<span class="skill-icon-btn">' + iconSVG('bolt') + '</span>' +
-      '<span class="skill-name">Tambah Keahlian</span>';
-    skillsGrid.appendChild(addCard);
 
     bindGridEvents();
     observeCards();
@@ -586,16 +558,8 @@ footer .stamp{color:var(--neon-bright);}
 
   function bindGridEvents(){
     skillsGrid.querySelectorAll('[data-edit]').forEach(function(btn){
-      btn.addEventListener('click', function(){ openPicker('edit', +btn.dataset.edit); });
+      btn.addEventListener('click', function(){ openPicker(+btn.dataset.edit); });
     });
-    skillsGrid.querySelectorAll('[data-remove]').forEach(function(btn){
-      btn.addEventListener('click', function(){
-        skills.splice(+btn.dataset.remove, 1);
-        renderSkills();
-      });
-    });
-    var addCard = document.getElementById('addSkillCard');
-    if(addCard) addCard.addEventListener('click', function(){ openPicker('add', null); });
   }
 
   var io = new IntersectionObserver(function(entries){
@@ -609,21 +573,18 @@ footer .stamp{color:var(--neon-bright);}
   function observeCards(){
     var cards = skillsGrid.querySelectorAll('.skill-card');
     cards.forEach(function(c,i){
-      if(c.classList.contains('add-card')){ c.classList.add('in-view'); return; }
       c.dataset.delay = i * 60;
       io.observe(c);
     });
   }
 
-  /* ---------- Icon picker overlay ---------- */
+  /* ---------- Icon picker overlay (Hanya untuk Edit Ikon) ---------- */
   var pickerOverlay = document.getElementById('pickerOverlay');
   var pickerGrid = document.getElementById('pickerGrid');
   var pickerTitle = document.getElementById('pickerTitle');
-  var pickerNameInput = document.getElementById('pickerNameInput');
   var pickerCancel = document.getElementById('pickerCancel');
   var pickerConfirm = document.getElementById('pickerConfirm');
 
-  var pickerMode = 'add';
   var pickerEditIndex = null;
   var pickerSelectedIcon = 'cube';
 
@@ -642,24 +603,15 @@ footer .stamp{color:var(--neon-bright);}
     pickerGrid.appendChild(b);
   });
 
-  function openPicker(mode, index){
-    pickerMode = mode;
+  function openPicker(index){
     pickerEditIndex = index;
-    if(mode === 'add'){
-      pickerTitle.textContent = 'Tambah Keahlian Baru';
-      pickerNameInput.style.display = 'block';
-      pickerNameInput.value = '';
-      pickerSelectedIcon = 'cube';
-    } else {
-      pickerTitle.textContent = 'Ganti Ikon';
-      pickerNameInput.style.display = 'none';
-      pickerSelectedIcon = skills[index].icon;
-    }
+    pickerTitle.textContent = 'Ganti Ikon ' + skills[index].name;
+    pickerSelectedIcon = skills[index].icon;
+    
     pickerGrid.querySelectorAll('.picker-icon').forEach(function(el){
       el.classList.toggle('selected', el.dataset.icon === pickerSelectedIcon);
     });
     pickerOverlay.classList.add('show');
-    if(mode === 'add') setTimeout(function(){ pickerNameInput.focus(); }, 50);
   }
   function closePicker(){ pickerOverlay.classList.remove('show'); }
 
@@ -667,17 +619,10 @@ footer .stamp{color:var(--neon-bright);}
   pickerOverlay.addEventListener('click', function(e){ if(e.target === pickerOverlay) closePicker(); });
 
   pickerConfirm.addEventListener('click', function(){
-    if(pickerMode === 'add'){
-      var name = pickerNameInput.value.trim();
-      if(!name){ pickerNameInput.focus(); return; }
-      skills.push({name:name, icon:pickerSelectedIcon});
-    } else {
-      skills[pickerEditIndex].icon = pickerSelectedIcon;
-    }
+    skills[pickerEditIndex].icon = pickerSelectedIcon;
     renderSkills();
     closePicker();
   });
-  pickerNameInput.addEventListener('keydown', function(e){ if(e.key === 'Enter') pickerConfirm.click(); });
 
   renderSkills();
 
@@ -704,7 +649,7 @@ footer .stamp{color:var(--neon-bright);}
   avatarBtn.addEventListener('click', function(){ goTo('editor'); });
   backBtn.addEventListener('click', function(){ goTo('home'); resetCropUI(); });
 
-  /* ---------- Avatar upload + circular crop ---------- */
+  /* ---------- Avatar upload + circular crop + LocalStorage ---------- */
   var dropzone = document.getElementById('dropzone');
   var fileInput = document.getElementById('fileInput');
   var cropWrap = document.getElementById('cropWrap');
@@ -724,6 +669,12 @@ footer .stamp{color:var(--neon-bright);}
   var natW = 0, natH = 0, baseScale = 1, zoom = 1;
   var tx = 0, ty = 0;
   var dragging = false, dragStartX = 0, dragStartY = 0, txStart = 0, tyStart = 0;
+
+  // Cek foto profil tersimpan di localStorage saat web dibuka
+  var savedAvatar = localStorage.getItem('profile_avatar');
+  if(savedAvatar){
+    setAvatar(savedAvatar);
+  }
 
   dropzone.addEventListener('click', function(){ fileInput.click(); });
   dropzone.addEventListener('keydown', function(e){ if(e.key === 'Enter' || e.key === ' '){ fileInput.click(); } });
@@ -844,6 +795,13 @@ footer .stamp{color:var(--neon-bright);}
   function setAvatar(dataUrl){
     [headerImg, editorCurrentImg].forEach(function(img){ img.src = dataUrl; img.style.display = 'block'; });
     [headerInitials, editorInitials].forEach(function(span){ span.style.display = 'none'; });
+    
+    // Simpan ke localStorage agar foto tetap ada saat web ditutup/direfresh
+    try {
+      localStorage.setItem('profile_avatar', dataUrl);
+    } catch (e) {
+      console.error("Gagal menyimpan foto:", e);
+    }
   }
 })();
 </script>
