@@ -37,7 +37,8 @@ body{
   *{animation-duration:.001ms !important; transition-duration:.001ms !important;}
 }
 
-button{font-family:inherit; cursor:pointer;}
+button, input{font-family:inherit;}
+button{cursor:pointer;}
 :focus-visible{outline:2px solid var(--neon-bright); outline-offset:2px;}
 .mono{font-family:'JetBrains Mono',monospace;}
 
@@ -66,6 +67,24 @@ header.top{
 }
 .brand{font-family:'JetBrains Mono',monospace; font-weight:800; font-size:15px; letter-spacing:.04em; color:var(--ink); display:flex; align-items:center; gap:10px;}
 .brand .dot{width:8px; height:8px; border-radius:50%; background:var(--neon); box-shadow:0 0 10px 2px var(--neon-glow);}
+
+.nav-actions{display:flex; align-items:center; gap:14px;}
+
+/* Mode Badge */
+.mode-badge{
+  font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700;
+  padding:4px 10px; border-radius:12px; letter-spacing:.08em; text-transform:uppercase;
+  background:rgba(255,255,255,0.05); color:var(--dim); border:1px solid rgba(255,255,255,0.1);
+}
+.mode-badge.admin{background:var(--neon-soft); color:var(--neon-bright); border-color:var(--neon);}
+
+/* Admin Auth Button */
+.auth-btn{
+  background:var(--glass); border:1px solid rgba(255,255,255,0.1); color:var(--ink);
+  padding:8px 14px; border-radius:20px; font-family:'JetBrains Mono',monospace;
+  font-size:11px; font-weight:600; transition:all .2s ease;
+}
+.auth-btn:hover{background:var(--neon-soft); border-color:var(--neon); color:var(--neon-bright);}
 
 .avatar-btn{
   position:relative; width:50px; height:50px; border-radius:50%;
@@ -164,9 +183,17 @@ header.top{
 
 /* ===== SKILLS SECTION ===== */
 .section{padding:80px 6vw 100px; position:relative;}
-.section-head{margin-bottom:40px; max-width:640px;}
+.section-head-wrap{display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:40px; flex-wrap:wrap; gap:16px;}
+.section-head{max-width:640px;}
 .section-head h2{font-family:'JetBrains Mono',monospace; font-weight:800; font-size:clamp(24px,4vw,38px); margin:0 0 10px; color:var(--ink);}
 .section-head p{color:var(--dim); font-size:15px; line-height:1.6; margin:0;}
+
+.add-skill-btn{
+  display:none; align-items:center; gap:8px; background:var(--neon-soft); color:var(--neon-bright);
+  border:1px solid var(--neon); padding:10px 18px; border-radius:20px; font-family:'JetBrains Mono',monospace;
+  font-size:12px; font-weight:700; transition:all .2s ease;
+}
+.add-skill-btn:hover{background:var(--neon); color:#02121F; box-shadow:0 0 18px -4px var(--neon-glow);}
 
 .skills-grid{
   display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:16px;
@@ -196,13 +223,28 @@ header.top{
 
 .skill-edit-hint{
   position:absolute; bottom:8px; font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.06em;
-  color:var(--dimmer); text-transform:uppercase; opacity:0; transition:opacity .2s ease;
+  color:var(--dimmer); text-transform:uppercase; opacity:0; transition:opacity .2s ease; display:none;
 }
 .skill-card:hover .skill-edit-hint{opacity:1;}
 
-/* ===== ICON PICKER PANEL ===== */
+.delete-skill-btn{
+  position:absolute; top:8px; right:8px; width:22px; height:22px; border-radius:50%;
+  background:rgba(255,107,107,0.15); border:none; color:var(--danger); display:none;
+  align-items:center; justify-content:center; padding:0; transition:all .2s ease;
+}
+.delete-skill-btn:hover{background:var(--danger); color:#fff;}
+.delete-skill-btn svg{width:12px; height:12px;}
+
+/* ADMIN ACTIVE STYLES */
+body.is-admin .admin-only{display:flex !important;}
+body.is-admin .skill-icon-btn{cursor:pointer;}
+body.is-admin .skill-edit-hint{display:block;}
+body.is-admin .delete-skill-btn{display:flex;}
+body:not(.is-admin) .skill-icon-btn{cursor:default; pointer-events:none;}
+
+/* ===== MODAL & PANEL STYLES ===== */
 .picker-overlay{
-  position:fixed; inset:0; z-index:80; background:rgba(2,4,8,0.6); backdrop-filter:blur(3px);
+  position:fixed; inset:0; z-index:80; background:rgba(2,4,8,0.75); backdrop-filter:blur(5px);
   display:none; align-items:center; justify-content:center; padding:20px;
 }
 .picker-overlay.show{display:flex;}
@@ -214,14 +256,14 @@ header.top{
 .picker-grid{display:grid; grid-template-columns:repeat(6,1fr); gap:9px; margin-bottom:18px;}
 .picker-icon{
   aspect-ratio:1; border-radius:12px; border:none; background:rgba(255,255,255,0.04);
-  color:var(--dim); display:flex; align-items:center; justify-content:center; transition:all .15s ease;
+  color:var(--dim); display:flex; align-items:center; justify-content:center; transition:all .15s ease; cursor:pointer;
 }
 .picker-icon svg{width:18px; height:18px;}
 .picker-icon:hover{background:var(--neon-soft); color:var(--neon-bright);}
 .picker-icon.selected{background:var(--neon-soft); color:var(--neon-bright); box-shadow:0 0 0 2px var(--neon);}
 
 .picker-input{
-  width:100%; background:rgba(255,255,255,0.04); border:none; border-radius:10px;
+  width:100%; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:10px;
   padding:11px 13px; color:var(--ink); font-family:'Inter',sans-serif; font-size:14px; margin-bottom:16px;
 }
 .picker-input::placeholder{color:var(--dimmer);}
@@ -298,6 +340,8 @@ footer .stamp{color:var(--neon-bright);}
 @media (max-width:640px){
   .hero{padding:110px 6vw 60px;}
   .section{padding:56px 6vw 70px;}
+  header.top{padding:14px 4vw;}
+  .nav-actions{gap:8px;}
 }
 </style>
 </head>
@@ -308,16 +352,23 @@ footer .stamp{color:var(--neon-bright);}
 
 <header class="top">
   <span class="brand"><span class="dot"></span>GHALIH.DEV</span>
-  <button class="avatar-btn" id="avatarBtn" aria-label="Buka editor profil">
-    <span class="avatar-ring" aria-hidden="true"></span>
-    <span class="avatar-frame">
-      <span class="initials" id="headerInitials">DA</span>
-      <img id="headerAvatarImg" alt="Foto profil">
-    </span>
-    <span class="avatar-reticle" aria-hidden="true">
-      <svg viewBox="0 0 24 24" fill="none" stroke="#02121F" stroke-width="3"><path d="M12 5v14M5 12h14"/></svg>
-    </span>
-  </button>
+  
+  <div class="nav-actions">
+    <span class="mode-badge" id="modeBadge">Spectator Mode</span>
+    <button class="auth-btn" id="authBtn">Login Admin</button>
+
+    <!-- Tombol Foto Profil (Hanya Aktif/Tampil di Mode Admin) -->
+    <button class="avatar-btn admin-only" id="avatarBtn" aria-label="Buka editor profil" style="display:none;">
+      <span class="avatar-ring" aria-hidden="true"></span>
+      <span class="avatar-frame">
+        <span class="initials" id="headerInitials">DA</span>
+        <img id="headerAvatarImg" alt="Foto profil">
+      </span>
+      <span class="avatar-reticle" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#02121F" stroke-width="3"><path d="M12 5v14M5 12h14"/></svg>
+      </span>
+    </button>
+  </div>
 </header>
 
 <!-- ============ HOME VIEW ============ -->
@@ -326,10 +377,10 @@ footer .stamp{color:var(--neon-bright);}
   <section class="hero" id="about">
     <div class="hero-grid">
 
-      <!-- Kontak: sidebar di bagian atas -->
+      <!-- Kontak -->
       <aside class="contact-card">
         <h3>Kontak</h3>
-        <a class="contact-row" href="mailto:email@contoh.com">
+        <a class="contact-row" href="mailto:ghalih.saint12@gmail.com">
           <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></span>
           <span class="txt">ghalih.saint12@gmail.com</span>
         </a>
@@ -341,7 +392,7 @@ footer .stamp{color:var(--neon-bright);}
           <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-6.1-7-11a7 7 0 0 1 14 0c0 4.9-7 11-7 11Z"/><circle cx="12" cy="10" r="2.4"/></svg></span>
           <span class="txt">Samarinda, Indonesia</span>
         </a>
-        <a class="contact-row" href="https://github.com/username" target="_blank" rel="noopener">
+        <a class="contact-row" href="https://github.com/ghalihsaintGit" target="_blank" rel="noopener">
           <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.6 2.8 5.5 3.1 5.5 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4.1 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg></span>
           <span class="txt">github.com/ghalihsaintGit</span>
         </a>
@@ -370,9 +421,16 @@ footer .stamp{color:var(--neon-bright);}
   </section>
 
   <section class="section" id="skills">
-    <div class="section-head">
-      <h2>Keahlian</h2>
-      <p>Daftar keahlian utama dan teknologi yang dikuasai.</p>
+    <div class="section-head-wrap">
+      <div class="section-head">
+        <h2>Keahlian</h2>
+        <p id="skillsHelpTxt">Daftar keahlian utama dan teknologi yang dikuasai.</p>
+      </div>
+      <!-- Tombol Tambah Keahlian (Hanya Admin) -->
+      <button class="add-skill-btn admin-only" id="addSkillBtn">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+        Tambah Keahlian
+      </button>
     </div>
     <div class="skills-grid" id="skillsGrid"></div>
   </section>
@@ -433,14 +491,30 @@ footer .stamp{color:var(--neon-bright);}
   </section>
 </main>
 
-<!-- ============ ICON PICKER (hanya untuk ganti ikon) ============ -->
-<div class="picker-overlay" id="pickerOverlay">
+<!-- ============ MODAL LOGIN ADMIN ============ -->
+<div class="picker-overlay" id="loginModal">
   <div class="picker-panel">
-    <h4 id="pickerTitle">Pilih Ikon</h4>
-    <div class="picker-grid" id="pickerGrid"></div>
+    <h4>Login Admin</h4>
+    <input type="text" id="loginUser" class="picker-input" placeholder="Username (default: admin)">
+    <input type="password" id="loginPass" class="picker-input" placeholder="Password (default: admin123)">
+    <div id="loginError" style="color:var(--danger); font-size:12px; margin-bottom:12px; display:none;">Username atau Password salah!</div>
     <div class="picker-actions">
-      <button class="btn" id="pickerCancel">Batal</button>
-      <button class="btn primary" id="pickerConfirm">Simpan</button>
+      <button class="btn" id="loginCancel">Batal</button>
+      <button class="btn primary" id="loginConfirm">Masuk</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODAL ADD/EDIT SKILL ============ -->
+<div class="picker-overlay" id="skillModal">
+  <div class="picker-panel">
+    <h4 id="skillModalTitle">Kelola Keahlian</h4>
+    <input type="text" id="skillNameInput" class="picker-input" placeholder="Nama Keahlian (contoh: React JS)">
+    <div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--dim); margin-bottom:8px;">Pilih Ikon:</div>
+    <div class="picker-grid" id="modalPickerGrid"></div>
+    <div class="picker-actions">
+      <button class="btn" id="skillModalCancel">Batal</button>
+      <button class="btn primary" id="skillModalConfirm">Simpan</button>
     </div>
   </div>
 </div>
@@ -450,6 +524,65 @@ footer .stamp{color:var(--neon-bright);}
 <script>
 (function(){
   "use strict";
+
+  /* ---------- STATE & AUTENTIKASI ---------- */
+  var isAdmin = false;
+  var DEFAULT_USER = "admin";
+  var DEFAULT_PASS = "admin123";
+
+  var modeBadge = document.getElementById('modeBadge');
+  var authBtn = document.getElementById('authBtn');
+  var loginModal = document.getElementById('loginModal');
+  var loginUser = document.getElementById('loginUser');
+  var loginPass = document.getElementById('loginPass');
+  var loginError = document.getElementById('loginError');
+  var loginCancel = document.getElementById('loginCancel');
+  var loginConfirm = document.getElementById('loginConfirm');
+
+  // Cek Status Auth dari Session Storage
+  if(sessionStorage.getItem('is_admin') === 'true'){
+    setAdminMode(true);
+  }
+
+  function setAdminMode(status){
+    isAdmin = status;
+    sessionStorage.setItem('is_admin', status ? 'true' : 'false');
+    if(status){
+      document.body.classList.add('is-admin');
+      modeBadge.textContent = "Admin Mode";
+      modeBadge.classList.add('admin');
+      authBtn.textContent = "Logout";
+      document.getElementById('skillsHelpTxt').textContent = "Klik ikon untuk mengganti, atau klik tombol hapus/tambah.";
+    } else {
+      document.body.classList.remove('is-admin');
+      modeBadge.textContent = "Spectator Mode";
+      modeBadge.classList.remove('admin');
+      authBtn.textContent = "Login Admin";
+      document.getElementById('skillsHelpTxt').textContent = "Daftar keahlian utama dan teknologi yang dikuasai.";
+    }
+    renderSkills();
+  }
+
+  authBtn.addEventListener('click', function(){
+    if(isAdmin){
+      setAdminMode(false);
+    } else {
+      loginUser.value = '';
+      loginPass.value = '';
+      loginError.style.display = 'none';
+      loginModal.classList.add('show');
+    }
+  });
+
+  loginCancel.addEventListener('click', function(){ loginModal.classList.remove('show'); });
+  loginConfirm.addEventListener('click', function(){
+    if(loginUser.value === DEFAULT_USER && loginPass.value === DEFAULT_PASS){
+      loginModal.classList.remove('show');
+      setAdminMode(true);
+    } else {
+      loginError.style.display = 'block';
+    }
+  });
 
   /* ---------- Starfield background ---------- */
   (function initStars(){
@@ -520,15 +653,20 @@ footer .stamp{color:var(--neon-bright);}
     return '<svg class="' + (extraClass||'') + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">' + inner + '</svg>';
   }
 
-  /* ---------- Skill data (Dikunci tanpa tombol hapus/tambah) ---------- */
-  var skills = [
+  /* ---------- SKILLS DATA & PERSISTENCE ---------- */
+  var defaultSkills = [
     {name:"3D Modeling", icon:"cube"},
     {name:"PHP",         icon:"tag"},
     {name:"Python",      icon:"terminal"},
     {name:"JavaScript",  icon:"braces"}
   ];
 
+  var skills = JSON.parse(localStorage.getItem('profile_skills')) || defaultSkills;
   var skillsGrid = document.getElementById('skillsGrid');
+
+  function saveSkills(){
+    localStorage.setItem('profile_skills', JSON.stringify(skills));
+  }
 
   function escapeHtml(s){
     var d = document.createElement('div');
@@ -542,6 +680,7 @@ footer .stamp{color:var(--neon-bright);}
       var card = document.createElement('div');
       card.className = 'skill-card';
       card.innerHTML =
+        '<button class="delete-skill-btn" data-del="' + i + '" title="Hapus Keahlian"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M18 6L6 18M6 6l12 12"/></svg></button>' +
         '<button class="skill-icon-btn" data-edit="' + i + '" aria-label="Ganti ikon ' + escapeHtml(sk.name) + '">' + iconSVG(sk.icon) + '</button>' +
         '<span class="skill-name">' + escapeHtml(sk.name) + '</span>' +
         '<span class="skill-edit-hint">klik ikon = ganti</span>';
@@ -554,7 +693,20 @@ footer .stamp{color:var(--neon-bright);}
 
   function bindGridEvents(){
     skillsGrid.querySelectorAll('[data-edit]').forEach(function(btn){
-      btn.addEventListener('click', function(){ openPicker(+btn.dataset.edit); });
+      btn.addEventListener('click', function(){
+        if(isAdmin) openSkillModal(+btn.dataset.edit);
+      });
+    });
+    skillsGrid.querySelectorAll('[data-del]').forEach(function(btn){
+      btn.addEventListener('click', function(e){
+        e.stopPropagation();
+        var index = +btn.dataset.del;
+        if(confirm('Hapus keahlian "' + skills[index].name + '"?')){
+          skills.splice(index, 1);
+          saveSkills();
+          renderSkills();
+        }
+      });
     });
   }
 
@@ -566,6 +718,7 @@ footer .stamp{color:var(--neon-bright);}
       }
     });
   }, {threshold:0.12});
+
   function observeCards(){
     var cards = skillsGrid.querySelectorAll('.skill-card');
     cards.forEach(function(c,i){
@@ -574,50 +727,70 @@ footer .stamp{color:var(--neon-bright);}
     });
   }
 
-  /* ---------- Icon picker overlay (Hanya untuk Edit Ikon) ---------- */
-  var pickerOverlay = document.getElementById('pickerOverlay');
-  var pickerGrid = document.getElementById('pickerGrid');
-  var pickerTitle = document.getElementById('pickerTitle');
-  var pickerCancel = document.getElementById('pickerCancel');
-  var pickerConfirm = document.getElementById('pickerConfirm');
+  /* ---------- MODAL ADD/EDIT SKILL ---------- */
+  var skillModal = document.getElementById('skillModal');
+  var skillModalTitle = document.getElementById('skillModalTitle');
+  var skillNameInput = document.getElementById('skillNameInput');
+  var modalPickerGrid = document.getElementById('modalPickerGrid');
+  var skillModalCancel = document.getElementById('skillModalCancel');
+  var skillModalConfirm = document.getElementById('skillModalConfirm');
+  var addSkillBtn = document.getElementById('addSkillBtn');
 
-  var pickerEditIndex = null;
-  var pickerSelectedIcon = 'cube';
+  var currentEditIndex = null;
+  var selectedIconKey = 'cube';
 
+  // Render Grid Ikon di Modal
+  modalPickerGrid.innerHTML = '';
   iconOrder.forEach(function(key){
     var b = document.createElement('button');
     b.className = 'picker-icon';
     b.type = 'button';
     b.dataset.icon = key;
     b.innerHTML = iconSVG(key);
-    b.setAttribute('aria-label', key);
     b.addEventListener('click', function(){
-      pickerSelectedIcon = key;
-      pickerGrid.querySelectorAll('.picker-icon').forEach(function(el){ el.classList.remove('selected'); });
+      selectedIconKey = key;
+      modalPickerGrid.querySelectorAll('.picker-icon').forEach(function(el){ el.classList.remove('selected'); });
       b.classList.add('selected');
     });
-    pickerGrid.appendChild(b);
+    modalPickerGrid.appendChild(b);
   });
 
-  function openPicker(index){
-    pickerEditIndex = index;
-    pickerTitle.textContent = 'Ganti Ikon ' + skills[index].name;
-    pickerSelectedIcon = skills[index].icon;
-    
-    pickerGrid.querySelectorAll('.picker-icon').forEach(function(el){
-      el.classList.toggle('selected', el.dataset.icon === pickerSelectedIcon);
+  addSkillBtn.addEventListener('click', function(){ openSkillModal(null); });
+
+  function openSkillModal(index){
+    currentEditIndex = index;
+    if(index === null){
+      skillModalTitle.textContent = "Tambah Keahlian Baru";
+      skillNameInput.value = "";
+      selectedIconKey = "cube";
+    } else {
+      skillModalTitle.textContent = "Edit Keahlian";
+      skillNameInput.value = skills[index].name;
+      selectedIconKey = skills[index].icon;
+    }
+
+    modalPickerGrid.querySelectorAll('.picker-icon').forEach(function(el){
+      el.classList.toggle('selected', el.dataset.icon === selectedIconKey);
     });
-    pickerOverlay.classList.add('show');
+
+    skillModal.classList.add('show');
   }
-  function closePicker(){ pickerOverlay.classList.remove('show'); }
 
-  pickerCancel.addEventListener('click', closePicker);
-  pickerOverlay.addEventListener('click', function(e){ if(e.target === pickerOverlay) closePicker(); });
+  skillModalCancel.addEventListener('click', function(){ skillModal.classList.remove('show'); });
+  skillModalConfirm.addEventListener('click', function(){
+    var nameVal = skillNameInput.value.trim();
+    if(!nameVal) return alert('Nama keahlian tidak boleh kosong!');
 
-  pickerConfirm.addEventListener('click', function(){
-    skills[pickerEditIndex].icon = pickerSelectedIcon;
+    if(currentEditIndex === null){
+      skills.push({name: nameVal, icon: selectedIconKey});
+    } else {
+      skills[currentEditIndex].name = nameVal;
+      skills[currentEditIndex].icon = selectedIconKey;
+    }
+
+    saveSkills();
     renderSkills();
-    closePicker();
+    skillModal.classList.remove('show');
   });
 
   renderSkills();
@@ -642,7 +815,7 @@ footer .stamp{color:var(--neon-bright);}
     }
     window.scrollTo({top:0, behavior:'auto'});
   }
-  avatarBtn.addEventListener('click', function(){ goTo('editor'); });
+  avatarBtn.addEventListener('click', function(){ if(isAdmin) goTo('editor'); });
   backBtn.addEventListener('click', function(){ goTo('home'); resetCropUI(); });
 
   /* ---------- Avatar upload + circular crop + LocalStorage ---------- */
@@ -666,7 +839,6 @@ footer .stamp{color:var(--neon-bright);}
   var tx = 0, ty = 0;
   var dragging = false, dragStartX = 0, dragStartY = 0, txStart = 0, tyStart = 0;
 
-  // Cek foto profil tersimpan di localStorage saat web dibuka
   var savedAvatar = localStorage.getItem('profile_avatar');
   if(savedAvatar){
     setAvatar(savedAvatar);
@@ -792,7 +964,6 @@ footer .stamp{color:var(--neon-bright);}
     [headerImg, editorCurrentImg].forEach(function(img){ img.src = dataUrl; img.style.display = 'block'; });
     [headerInitials, editorInitials].forEach(function(span){ span.style.display = 'none'; });
     
-    // Simpan ke localStorage agar foto tetap ada saat web ditutup/direfresh
     try {
       localStorage.setItem('profile_avatar', dataUrl);
     } catch (e) {
