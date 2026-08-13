@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Profil — Portofolio Pribadi</title>
+
+<!-- Optional: Bootstrap 5 CSS untuk utilitas bawaan -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
 <style>
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
 
@@ -117,6 +121,16 @@ header.top{
 }
 .avatar-reticle svg{width:8px; height:8px;}
 
+/* Normal static avatar (untuk Spectator) */
+.static-avatar{
+  position:relative; width:50px; height:50px; border-radius:50%;
+  background:linear-gradient(135deg,#101827,#05070C);
+  display:flex; align-items:center; justify-content:center;
+  overflow:hidden; box-shadow:0 0 0 2px rgba(255,255,255,0.08);
+}
+.static-avatar img{width:100%; height:100%; object-fit:cover; display:none;}
+.static-avatar span{font-family:'JetBrains Mono',monospace; font-weight:700; font-size:15px; color:var(--ink);}
+
 /* ===== VIEWS ===== */
 .view{position:relative; z-index:1; transition:opacity .45s ease, transform .45s ease;}
 .view.hidden-view{position:absolute; top:0; left:0; width:100%; opacity:0; transform:scale(.97); pointer-events:none;}
@@ -157,13 +171,28 @@ header.top{
 }
 .eyebrow::before{content:''; width:26px; height:1px; background:var(--neon); box-shadow:0 0 8px var(--neon-glow);}
 
+/* Disesuaikan agar tulisan tidak berantakan & responsif di berbagai platform */
 .hero h1{
-  font-family:'JetBrains Mono',monospace; font-weight:800; font-size:clamp(34px,6vw,74px);
-  line-height:1.05; letter-spacing:-.01em; margin:0 0 24px; color:var(--ink); max-width:15ch;
+  font-family:'JetBrains Mono',monospace; 
+  font-weight:800; 
+  font-size:clamp(24px, 3.8vw, 46px); 
+  line-height:1.25; 
+  letter-spacing:-.01em; 
+  margin:0 0 24px; 
+  color:var(--ink); 
+  max-width:850px;
 }
 .hero h1 .accent{color:var(--neon-bright); text-shadow:0 0 22px var(--neon-glow);}
 
-.hero p.bio{max-width:600px; font-size:16px; line-height:1.75; color:var(--dim); margin:0 0 30px;}
+/* Rata Kanan Kiri (Justify) pada Bio */
+.hero p.bio{
+  max-width:680px; 
+  font-size:16px; 
+  line-height:1.75; 
+  color:var(--dim); 
+  margin:0 0 30px;
+  text-align: justify;
+}
 
 .tag-row{display:flex; flex-wrap:wrap; gap:10px; margin-bottom:44px;}
 .tag{
@@ -181,7 +210,7 @@ header.top{
 .scroll-cue .line::after{content:''; position:absolute; left:-1px; top:-30px; width:3px; height:14px; background:var(--neon-bright); box-shadow:0 0 8px var(--neon-glow); animation:drip 1.8s ease-in-out infinite;}
 @keyframes drip{0%{top:-14px;} 100%{top:34px;}}
 
-/* ===== SKILLS SECTION ===== */
+/* ===== SKILLS / PENGALAMAN SECTION ===== */
 .section{padding:80px 6vw 100px; position:relative;}
 .section-head-wrap{display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:40px; flex-wrap:wrap; gap:16px;}
 .section-head{max-width:640px;}
@@ -216,7 +245,6 @@ header.top{
   transition:box-shadow .2s ease, transform .2s ease;
 }
 .skill-icon-btn svg{width:26px; height:26px;}
-.skill-icon-btn:hover{box-shadow:0 0 0 3px var(--neon-soft); transform:scale(1.05);}
 .skill-card:hover .skill-icon-btn{box-shadow:0 0 18px -2px var(--neon-glow);}
 
 .skill-name{font-family:'JetBrains Mono',monospace; font-weight:600; font-size:13.5px; color:var(--ink); word-break:break-word;}
@@ -235,14 +263,15 @@ header.top{
 .delete-skill-btn:hover{background:var(--danger); color:#fff;}
 .delete-skill-btn svg{width:12px; height:12px;}
 
-/* ADMIN ACTIVE STYLES */
+/* ADMIN CONTROLS PERMISSION */
 body.is-admin .admin-only{display:flex !important;}
+body.is-admin .spectator-only{display:none !important;}
 body.is-admin .skill-icon-btn{cursor:pointer;}
 body.is-admin .skill-edit-hint{display:block;}
 body.is-admin .delete-skill-btn{display:flex;}
 body:not(.is-admin) .skill-icon-btn{cursor:default; pointer-events:none;}
 
-/* ===== MODAL & PANEL STYLES ===== */
+/* ===== MODALS ===== */
 .picker-overlay{
   position:fixed; inset:0; z-index:80; background:rgba(2,4,8,0.75); backdrop-filter:blur(5px);
   display:none; align-items:center; justify-content:center; padding:20px;
@@ -279,7 +308,6 @@ body:not(.is-admin) .skill-icon-btn{cursor:default; pointer-events:none;}
 .btn:hover{background:rgba(255,255,255,0.1); color:var(--ink);}
 .btn.primary{background:var(--neon); color:#02121F;}
 .btn.primary:hover{background:var(--neon-bright); box-shadow:0 0 18px -4px var(--neon-glow);}
-.btn:disabled{opacity:.35; pointer-events:none;}
 
 footer{
   padding:30px 6vw; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;
@@ -357,11 +385,17 @@ footer .stamp{color:var(--neon-bright);}
     <span class="mode-badge" id="modeBadge">Spectator Mode</span>
     <button class="auth-btn" id="authBtn">Login Admin</button>
 
-    <!-- Tombol Foto Profil (Hanya Aktif/Tampil di Mode Admin) -->
+    <!-- Foto Profil Biasa (Tampil saat Spectator) -->
+    <div class="static-avatar spectator-only">
+      <span class="spectatorInitials">GN</span>
+      <img class="spectatorAvatarImg" alt="Foto profil">
+    </div>
+
+    <!-- Tombol Foto Profil (Hanya Tampil saat Mode Admin) -->
     <button class="avatar-btn admin-only" id="avatarBtn" aria-label="Buka editor profil" style="display:none;">
       <span class="avatar-ring" aria-hidden="true"></span>
       <span class="avatar-frame">
-        <span class="initials" id="headerInitials">DA</span>
+        <span class="initials" id="headerInitials">GN</span>
         <img id="headerAvatarImg" alt="Foto profil">
       </span>
       <span class="avatar-reticle" aria-hidden="true">
@@ -400,7 +434,7 @@ footer .stamp{color:var(--neon-bright);}
 
       <div>
         <p class="eyebrow">Tentang Saya</p>
-        <h1>Membangun ide dari <span class="accent">wireframe</span> hingga kode yang jalan.</h1>
+        <h1>Halo, saya <span class="accent">GHALIH NUGROHO</span>. Saya Membangun ide dari <span class="accent">wireframe</span> hingga kode yang jalan.</h1>
         <p class="bio">
           Saya adalah seorang developer yang memiliki minat dalam pengembangan web dan desain 3D. Berpengalaman menggunakan PHP, Python, dan JavaScript 
           untuk membangun aplikasi yang fungsional serta menciptakan desain 3D yang menarik. Saya senang mempelajari teknologi baru dan terus mengembangkan kemampuan 
@@ -414,22 +448,23 @@ footer .stamp{color:var(--neon-bright);}
         </div>
         <div class="scroll-cue">
           <span class="line"></span>
-          Scroll untuk lihat keahlian
+          Scroll untuk lihat pengalaman
         </div>
       </div>
     </div>
   </section>
 
+  <!-- PENGALAMAN SECTION -->
   <section class="section" id="skills">
     <div class="section-head-wrap">
       <div class="section-head">
-        <h2>Keahlian</h2>
-        <p id="skillsHelpTxt">Daftar keahlian utama dan teknologi yang dikuasai.</p>
+        <h2>Pengalaman & Keahlian</h2>
+        <p id="skillsHelpTxt">Daftar pengalaman utama dan teknologi yang dikuasai.</p>
       </div>
-      <!-- Tombol Tambah Keahlian (Hanya Admin) -->
+      <!-- Tombol Tambah Pengalaman (Hanya Admin) -->
       <button class="add-skill-btn admin-only" id="addSkillBtn">
         <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
-        Tambah Keahlian
+        Tambah Pengalaman
       </button>
     </div>
     <div class="skills-grid" id="skillsGrid"></div>
@@ -441,7 +476,7 @@ footer .stamp{color:var(--neon-bright);}
   </footer>
 </main>
 
-<!-- ============ EDITOR VIEW ============ -->
+<!-- ============ EDITOR VIEW (Hanya Admin) ============ -->
 <main class="view hidden-view" id="view-editor">
   <section class="editor">
     <div class="editor-head">
@@ -456,7 +491,7 @@ footer .stamp{color:var(--neon-bright);}
     <div class="editor-card">
       <div class="current-row">
         <div class="current-avatar">
-          <span id="editorInitials">DA</span>
+          <span id="editorInitials">GN</span>
           <img id="editorCurrentImg" alt="Foto profil saat ini">
         </div>
         <div>
@@ -495,8 +530,8 @@ footer .stamp{color:var(--neon-bright);}
 <div class="picker-overlay" id="loginModal">
   <div class="picker-panel">
     <h4>Login Admin</h4>
-    <input type="text" id="loginUser" class="picker-input" placeholder="Username (default: admin)">
-    <input type="password" id="loginPass" class="picker-input" placeholder="Password (default: admin123)">
+    <input type="text" id="loginUser" class="picker-input" placeholder="Username">
+    <input type="password" id="loginPass" class="picker-input" placeholder="Password">
     <div id="loginError" style="color:var(--danger); font-size:12px; margin-bottom:12px; display:none;">Username atau Password salah!</div>
     <div class="picker-actions">
       <button class="btn" id="loginCancel">Batal</button>
@@ -505,12 +540,12 @@ footer .stamp{color:var(--neon-bright);}
   </div>
 </div>
 
-<!-- ============ MODAL ADD/EDIT SKILL ============ -->
+<!-- ============ MODAL ADD/EDIT PENGALAMAN ============ -->
 <div class="picker-overlay" id="skillModal">
   <div class="picker-panel">
-    <h4 id="skillModalTitle">Kelola Keahlian</h4>
-    <input type="text" id="skillNameInput" class="picker-input" placeholder="Nama Keahlian (contoh: React JS)">
-    <div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--dim); margin-bottom:8px;">Pilih Ikon:</div>
+    <h4 id="skillModalTitle">Kelola Pengalaman</h4>
+    <input type="text" id="skillNameInput" class="picker-input" placeholder="Judul Pengalaman / Skill">
+    <div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--dim); margin-bottom:8px;">Pilih Ikon Pengalaman:</div>
     <div class="picker-grid" id="modalPickerGrid"></div>
     <div class="picker-actions">
       <button class="btn" id="skillModalCancel">Batal</button>
@@ -527,8 +562,8 @@ footer .stamp{color:var(--neon-bright);}
 
   /* ---------- STATE & AUTENTIKASI ---------- */
   var isAdmin = false;
-  var DEFAULT_USER = "admin";
-  var DEFAULT_PASS = "admin123";
+  var DEFAULT_USER = "guwah";
+  var DEFAULT_PASS = "guwahbangetjirt";
 
   var modeBadge = document.getElementById('modeBadge');
   var authBtn = document.getElementById('authBtn');
@@ -552,13 +587,13 @@ footer .stamp{color:var(--neon-bright);}
       modeBadge.textContent = "Admin Mode";
       modeBadge.classList.add('admin');
       authBtn.textContent = "Logout";
-      document.getElementById('skillsHelpTxt').textContent = "Klik ikon untuk mengganti, atau klik tombol hapus/tambah.";
+      document.getElementById('skillsHelpTxt').textContent = "Klik ikon untuk mengganti, atau gunakan tombol hapus/tambah.";
     } else {
       document.body.classList.remove('is-admin');
       modeBadge.textContent = "Spectator Mode";
       modeBadge.classList.remove('admin');
       authBtn.textContent = "Login Admin";
-      document.getElementById('skillsHelpTxt').textContent = "Daftar keahlian utama dan teknologi yang dikuasai.";
+      document.getElementById('skillsHelpTxt').textContent = "Daftar pengalaman utama dan teknologi yang dikuasai.";
     }
     renderSkills();
   }
@@ -653,7 +688,7 @@ footer .stamp{color:var(--neon-bright);}
     return '<svg class="' + (extraClass||'') + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">' + inner + '</svg>';
   }
 
-  /* ---------- SKILLS DATA & PERSISTENCE ---------- */
+  /* ---------- DATA PENGALAMAN & PERSISTENSI ---------- */
   var defaultSkills = [
     {name:"3D Modeling", icon:"cube"},
     {name:"PHP",         icon:"tag"},
@@ -680,7 +715,7 @@ footer .stamp{color:var(--neon-bright);}
       var card = document.createElement('div');
       card.className = 'skill-card';
       card.innerHTML =
-        '<button class="delete-skill-btn" data-del="' + i + '" title="Hapus Keahlian"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M18 6L6 18M6 6l12 12"/></svg></button>' +
+        '<button class="delete-skill-btn" data-del="' + i + '" title="Hapus Pengalaman"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M18 6L6 18M6 6l12 12"/></svg></button>' +
         '<button class="skill-icon-btn" data-edit="' + i + '" aria-label="Ganti ikon ' + escapeHtml(sk.name) + '">' + iconSVG(sk.icon) + '</button>' +
         '<span class="skill-name">' + escapeHtml(sk.name) + '</span>' +
         '<span class="skill-edit-hint">klik ikon = ganti</span>';
@@ -701,7 +736,7 @@ footer .stamp{color:var(--neon-bright);}
       btn.addEventListener('click', function(e){
         e.stopPropagation();
         var index = +btn.dataset.del;
-        if(confirm('Hapus keahlian "' + skills[index].name + '"?')){
+        if(confirm('Hapus pengalaman "' + skills[index].name + '"?')){
           skills.splice(index, 1);
           saveSkills();
           renderSkills();
@@ -727,7 +762,7 @@ footer .stamp{color:var(--neon-bright);}
     });
   }
 
-  /* ---------- MODAL ADD/EDIT SKILL ---------- */
+  /* ---------- MODAL ADD/EDIT PENGALAMAN ---------- */
   var skillModal = document.getElementById('skillModal');
   var skillModalTitle = document.getElementById('skillModalTitle');
   var skillNameInput = document.getElementById('skillNameInput');
@@ -739,7 +774,6 @@ footer .stamp{color:var(--neon-bright);}
   var currentEditIndex = null;
   var selectedIconKey = 'cube';
 
-  // Render Grid Ikon di Modal
   modalPickerGrid.innerHTML = '';
   iconOrder.forEach(function(key){
     var b = document.createElement('button');
@@ -760,11 +794,11 @@ footer .stamp{color:var(--neon-bright);}
   function openSkillModal(index){
     currentEditIndex = index;
     if(index === null){
-      skillModalTitle.textContent = "Tambah Keahlian Baru";
+      skillModalTitle.textContent = "Tambah Pengalaman Baru";
       skillNameInput.value = "";
       selectedIconKey = "cube";
     } else {
-      skillModalTitle.textContent = "Edit Keahlian";
+      skillModalTitle.textContent = "Edit Pengalaman";
       skillNameInput.value = skills[index].name;
       selectedIconKey = skills[index].icon;
     }
@@ -779,7 +813,7 @@ footer .stamp{color:var(--neon-bright);}
   skillModalCancel.addEventListener('click', function(){ skillModal.classList.remove('show'); });
   skillModalConfirm.addEventListener('click', function(){
     var nameVal = skillNameInput.value.trim();
-    if(!nameVal) return alert('Nama keahlian tidak boleh kosong!');
+    if(!nameVal) return alert('Nama pengalaman tidak boleh kosong!');
 
     if(currentEditIndex === null){
       skills.push({name: nameVal, icon: selectedIconKey});
@@ -818,7 +852,7 @@ footer .stamp{color:var(--neon-bright);}
   avatarBtn.addEventListener('click', function(){ if(isAdmin) goTo('editor'); });
   backBtn.addEventListener('click', function(){ goTo('home'); resetCropUI(); });
 
-  /* ---------- Avatar upload + circular crop + LocalStorage ---------- */
+  /* ---------- Crop & LocalStorage ---------- */
   var dropzone = document.getElementById('dropzone');
   var fileInput = document.getElementById('fileInput');
   var cropWrap = document.getElementById('cropWrap');
@@ -833,6 +867,9 @@ footer .stamp{color:var(--neon-bright);}
   var headerInitials = document.getElementById('headerInitials');
   var editorCurrentImg = document.getElementById('editorCurrentImg');
   var editorInitials = document.getElementById('editorInitials');
+
+  var spectatorImgs = document.querySelectorAll('.spectatorAvatarImg');
+  var spectatorInitials = document.querySelectorAll('.spectatorInitials');
 
   var STAGE = 270;
   var natW = 0, natH = 0, baseScale = 1, zoom = 1;
@@ -964,6 +1001,9 @@ footer .stamp{color:var(--neon-bright);}
     [headerImg, editorCurrentImg].forEach(function(img){ img.src = dataUrl; img.style.display = 'block'; });
     [headerInitials, editorInitials].forEach(function(span){ span.style.display = 'none'; });
     
+    spectatorImgs.forEach(function(img){ img.src = dataUrl; img.style.display = 'block'; });
+    spectatorInitials.forEach(function(span){ span.style.display = 'none'; });
+
     try {
       localStorage.setItem('profile_avatar', dataUrl);
     } catch (e) {
