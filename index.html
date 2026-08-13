@@ -41,7 +41,7 @@ body{
   *{animation-duration:.001ms !important; transition-duration:.001ms !important;}
 }
 
-button, input{font-family:inherit;}
+button, input, textarea{font-family:inherit;}
 button{cursor:pointer;}
 :focus-visible{outline:2px solid var(--neon-bright); outline-offset:2px;}
 .mono{font-family:'JetBrains Mono',monospace;}
@@ -171,7 +171,6 @@ header.top{
 }
 .eyebrow::before{content:''; width:26px; height:1px; background:var(--neon); box-shadow:0 0 8px var(--neon-glow);}
 
-/* Disesuaikan agar tulisan tidak berantakan & responsif di berbagai platform */
 .hero h1{
   font-family:'JetBrains Mono',monospace; 
   font-weight:800; 
@@ -184,7 +183,6 @@ header.top{
 }
 .hero h1 .accent{color:var(--neon-bright); text-shadow:0 0 22px var(--neon-glow);}
 
-/* Rata Kanan Kiri (Justify) pada Bio */
 .hero p.bio{
   max-width:680px; 
   font-size:16px; 
@@ -210,20 +208,21 @@ header.top{
 .scroll-cue .line::after{content:''; position:absolute; left:-1px; top:-30px; width:3px; height:14px; background:var(--neon-bright); box-shadow:0 0 8px var(--neon-glow); animation:drip 1.8s ease-in-out infinite;}
 @keyframes drip{0%{top:-14px;} 100%{top:34px;}}
 
-/* ===== SKILLS / PENGALAMAN SECTION ===== */
-.section{padding:80px 6vw 100px; position:relative;}
-.section-head-wrap{display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:40px; flex-wrap:wrap; gap:16px;}
+/* ===== SECTIONS ===== */
+.section{padding:60px 6vw 80px; position:relative;}
+.section-head-wrap{display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:30px; flex-wrap:wrap; gap:16px;}
 .section-head{max-width:640px;}
-.section-head h2{font-family:'JetBrains Mono',monospace; font-weight:800; font-size:clamp(24px,4vw,38px); margin:0 0 10px; color:var(--ink);}
-.section-head p{color:var(--dim); font-size:15px; line-height:1.6; margin:0;}
+.section-head h2{font-family:'JetBrains Mono',monospace; font-weight:800; font-size:clamp(22px,3.5vw,36px); margin:0 0 10px; color:var(--ink);}
+.section-head p{color:var(--dim); font-size:14px; line-height:1.6; margin:0;}
 
-.add-skill-btn{
+.add-skill-btn, .admin-action-btn{
   display:none; align-items:center; gap:8px; background:var(--neon-soft); color:var(--neon-bright);
   border:1px solid var(--neon); padding:10px 18px; border-radius:20px; font-family:'JetBrains Mono',monospace;
   font-size:12px; font-weight:700; transition:all .2s ease;
 }
-.add-skill-btn:hover{background:var(--neon); color:#02121F; box-shadow:0 0 18px -4px var(--neon-glow);}
+.add-skill-btn:hover, .admin-action-btn:hover{background:var(--neon); color:#02121F; box-shadow:0 0 18px -4px var(--neon-glow);}
 
+/* ===== SKILLS GRID ===== */
 .skills-grid{
   display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:16px;
   max-width:1180px;
@@ -255,20 +254,56 @@ header.top{
 }
 .skill-card:hover .skill-edit-hint{opacity:1;}
 
-.delete-skill-btn{
-  position:absolute; top:8px; right:8px; width:22px; height:22px; border-radius:50%;
-  background:rgba(255,107,107,0.15); border:none; color:var(--danger); display:none;
-  align-items:center; justify-content:center; padding:0; transition:all .2s ease;
+.delete-skill-btn, .card-delete-btn{
+  position:absolute; top:8px; right:8px; width:26px; height:26px; border-radius:50%;
+  background:rgba(255,107,107,0.85); border:none; color:#fff; display:none;
+  align-items:center; justify-content:center; padding:0; transition:all .2s ease; z-index:10;
 }
-.delete-skill-btn:hover{background:var(--danger); color:#fff;}
-.delete-skill-btn svg{width:12px; height:12px;}
+.delete-skill-btn:hover, .card-delete-btn:hover{background:var(--danger); transform:scale(1.1);}
+.delete-skill-btn svg, .card-delete-btn svg{width:12px; height:12px;}
+
+/* ===== WEB / PROJECT GRID (ADA GAMBAR & DESKRIPSI) ===== */
+.web-grid{
+  display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr)); gap:22px;
+  max-width:1180px;
+}
+.web-card{
+  position:relative; background:var(--glass); border-radius:18px; overflow:hidden;
+  border:1px solid rgba(255,255,255,0.05); transition:all .25s ease;
+  display:flex; flex-direction:column; justify-content:space-between;
+}
+.web-card:hover{background:var(--glass-hover); border-color:var(--neon-soft); transform:translateY(-4px);}
+.web-img{width:100%; height:180px; object-fit:cover; background:#0B111C; border-bottom:1px solid rgba(255,255,255,0.05);}
+.web-content{padding:20px; flex:1; display:flex; flex-direction:column; justify-content:space-between;}
+.web-card h3{font-family:'JetBrains Mono',monospace; font-size:16px; font-weight:700; color:var(--neon-bright); margin:0 0 10px;}
+.web-card p{font-size:13px; color:var(--dim); line-height:1.6; margin:0 0 18px; text-align:justify;}
+.web-link{
+  display:inline-flex; align-items:center; gap:6px; font-family:'JetBrains Mono',monospace;
+  font-size:12px; color:var(--ink); text-decoration:none; font-weight:600;
+}
+.web-link:hover{color:var(--neon-bright);}
+
+/* ===== GALLERY / IMAGE GRID (DENGAN DESKRIPSI LENGKAP) ===== */
+.gallery-grid{
+  display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:20px;
+  max-width:1180px;
+}
+.gallery-card{
+  position:relative; background:var(--glass); border-radius:16px; overflow:hidden;
+  border:1px solid rgba(255,255,255,0.05); transition:all .25s ease;
+}
+.gallery-card:hover{border-color:var(--neon); transform:scale(1.02);}
+.gallery-card img{width:100%; height:200px; object-fit:cover; display:block; background:#000;}
+.gallery-info{padding:16px;}
+.gallery-title{font-family:'JetBrains Mono',monospace; font-size:14px; font-weight:700; color:var(--neon-bright); margin:0 0 6px;}
+.gallery-desc{font-size:12.5px; color:var(--dim); line-height:1.5; margin:0; text-align:justify;}
 
 /* ADMIN CONTROLS PERMISSION */
 body.is-admin .admin-only{display:flex !important;}
 body.is-admin .spectator-only{display:none !important;}
 body.is-admin .skill-icon-btn{cursor:pointer;}
 body.is-admin .skill-edit-hint{display:block;}
-body.is-admin .delete-skill-btn{display:flex;}
+body.is-admin .delete-skill-btn, body.is-admin .card-delete-btn{display:flex;}
 body:not(.is-admin) .skill-icon-btn{cursor:default; pointer-events:none;}
 
 /* ===== MODALS ===== */
@@ -278,7 +313,7 @@ body:not(.is-admin) .skill-icon-btn{cursor:default; pointer-events:none;}
 }
 .picker-overlay.show{display:flex;}
 .picker-panel{
-  width:100%; max-width:380px; background:#0B111C; border-radius:20px; padding:26px;
+  width:100%; max-width:420px; background:#0B111C; border-radius:20px; padding:26px;
   box-shadow:0 0 0 1px rgba(255,255,255,0.06), 0 30px 60px -20px rgba(0,0,0,0.6);
 }
 .picker-panel h4{font-family:'JetBrains Mono',monospace; font-size:13px; letter-spacing:.08em; text-transform:uppercase; color:var(--neon-bright); margin:0 0 16px;}
@@ -291,12 +326,13 @@ body:not(.is-admin) .skill-icon-btn{cursor:default; pointer-events:none;}
 .picker-icon:hover{background:var(--neon-soft); color:var(--neon-bright);}
 .picker-icon.selected{background:var(--neon-soft); color:var(--neon-bright); box-shadow:0 0 0 2px var(--neon);}
 
-.picker-input{
+.picker-input, .picker-textarea{
   width:100%; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:10px;
-  padding:11px 13px; color:var(--ink); font-family:'Inter',sans-serif; font-size:14px; margin-bottom:16px;
+  padding:11px 13px; color:var(--ink); font-family:'Inter',sans-serif; font-size:14px; margin-bottom:14px;
 }
-.picker-input::placeholder{color:var(--dimmer);}
-.picker-input:focus{outline:2px solid var(--neon); outline-offset:0;}
+.picker-textarea{resize:vertical; min-height:80px;}
+.picker-input::placeholder, .picker-textarea::placeholder{color:var(--dimmer);}
+.picker-input:focus, .picker-textarea:focus{outline:2px solid var(--neon); outline-offset:0;}
 
 .picker-actions{display:flex; gap:10px;}
 .btn{
@@ -454,7 +490,7 @@ footer .stamp{color:var(--neon-bright);}
     </div>
   </section>
 
-  <!-- PENGALAMAN SECTION -->
+  <!-- 1. PENGALAMAN SECTION -->
   <section class="section" id="skills">
     <div class="section-head-wrap">
       <div class="section-head">
@@ -468,6 +504,36 @@ footer .stamp{color:var(--neon-bright);}
       </button>
     </div>
     <div class="skills-grid" id="skillsGrid"></div>
+  </section>
+
+  <!-- 2. WEB PROYEK SECTION (DENGAN GAMBAR PREVIEW & DESKRIPSI) -->
+  <section class="section" id="webProjects">
+    <div class="section-head-wrap">
+      <div class="section-head">
+        <h2>Aplikasi & Web</h2>
+        <p>Daftar situs web dan proyek aplikasi yang telah saya kembangkan.</p>
+      </div>
+      <button class="admin-action-btn admin-only" id="addWebBtn">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+        Tambah Web
+      </button>
+    </div>
+    <div class="web-grid" id="webGrid"></div>
+  </section>
+
+  <!-- 3. GALERI GAMBAR SECTION (DENGAN GAMBAR & DESKRIPSI LENGKAP) -->
+  <section class="section" id="gallerySection">
+    <div class="section-head-wrap">
+      <div class="section-head">
+        <h2>Galeri Karya & Gambar</h2>
+        <p>Koleksi karya visual, desain 3D, dan tangkapan layar proyek beserta penjelasan lengkapnya.</p>
+      </div>
+      <button class="admin-action-btn admin-only" id="addGalleryBtn">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+        Unggah Gambar
+      </button>
+    </div>
+    <div class="gallery-grid" id="galleryGrid"></div>
   </section>
 
   <footer>
@@ -526,7 +592,9 @@ footer .stamp{color:var(--neon-bright);}
   </section>
 </main>
 
-<!-- ============ MODAL LOGIN ADMIN ============ -->
+<!-- ============ MODALS ============ -->
+
+<!-- MODAL LOGIN ADMIN -->
 <div class="picker-overlay" id="loginModal">
   <div class="picker-panel">
     <h4>Login Admin</h4>
@@ -540,7 +608,7 @@ footer .stamp{color:var(--neon-bright);}
   </div>
 </div>
 
-<!-- ============ MODAL ADD/EDIT PENGALAMAN ============ -->
+<!-- MODAL ADD/EDIT PENGALAMAN -->
 <div class="picker-overlay" id="skillModal">
   <div class="picker-panel">
     <h4 id="skillModalTitle">Kelola Pengalaman</h4>
@@ -550,6 +618,37 @@ footer .stamp{color:var(--neon-bright);}
     <div class="picker-actions">
       <button class="btn" id="skillModalCancel">Batal</button>
       <button class="btn primary" id="skillModalConfirm">Simpan</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL ADD WEB PROYEK (LENGKAP DENGAN GAMBAR, DESKRIPSI, LINK) -->
+<div class="picker-overlay" id="webModal">
+  <div class="picker-panel">
+    <h4>Tambah Proyek Web</h4>
+    <input type="text" id="webTitleInput" class="picker-input" placeholder="Nama Web / Proyek">
+    <textarea id="webDescInput" class="picker-textarea" placeholder="Deskripsi singkat mengenai web ini..."></textarea>
+    <input type="url" id="webUrlInput" class="picker-input" placeholder="Link URL (https://...)">
+    <div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--dim); margin-bottom:6px;">Gambar Pratinjau Web (Thumbnail):</div>
+    <input type="file" id="webFileInput" class="picker-input" accept="image/*">
+    <div class="picker-actions">
+      <button class="btn" id="webModalCancel">Batal</button>
+      <button class="btn primary" id="webModalConfirm">Simpan Web</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL UNGGAH GAMBAR GALERI (DENGAN DESKRIPSI) -->
+<div class="picker-overlay" id="galleryModal">
+  <div class="picker-panel">
+    <h4>Unggah Gambar Karya</h4>
+    <input type="text" id="galleryTitleInput" class="picker-input" placeholder="Judul Gambar / Desain">
+    <textarea id="galleryDescInput" class="picker-textarea" placeholder="Tuliskan deskripsi/penjelasan tentang gambar ini..."></textarea>
+    <div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--dim); margin-bottom:6px;">Pilih Berkas Gambar:</div>
+    <input type="file" id="galleryFileInput" class="picker-input" accept="image/*">
+    <div class="picker-actions">
+      <button class="btn" id="galleryModalCancel">Batal</button>
+      <button class="btn primary" id="galleryModalConfirm">Unggah Gambar</button>
     </div>
   </div>
 </div>
@@ -596,6 +695,8 @@ footer .stamp{color:var(--neon-bright);}
       document.getElementById('skillsHelpTxt').textContent = "Daftar pengalaman utama dan teknologi yang dikuasai.";
     }
     renderSkills();
+    renderWebs();
+    renderGallery();
   }
 
   authBtn.addEventListener('click', function(){
@@ -688,7 +789,13 @@ footer .stamp{color:var(--neon-bright);}
     return '<svg class="' + (extraClass||'') + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">' + inner + '</svg>';
   }
 
-  /* ---------- DATA PENGALAMAN & PERSISTENSI ---------- */
+  function escapeHtml(s){
+    var d = document.createElement('div');
+    d.textContent = s;
+    return d.innerHTML;
+  }
+
+  /* ---------- 1. DATA PENGALAMAN & PERSISTENSI ---------- */
   var defaultSkills = [
     {name:"3D Modeling", icon:"cube"},
     {name:"PHP",         icon:"tag"},
@@ -701,12 +808,6 @@ footer .stamp{color:var(--neon-bright);}
 
   function saveSkills(){
     localStorage.setItem('profile_skills', JSON.stringify(skills));
-  }
-
-  function escapeHtml(s){
-    var d = document.createElement('div');
-    d.textContent = s;
-    return d.innerHTML;
   }
 
   function renderSkills(){
@@ -827,7 +928,153 @@ footer .stamp{color:var(--neon-bright);}
     skillModal.classList.remove('show');
   });
 
-  renderSkills();
+  /* ---------- 2. MANAJEMEN WEB / PROYEK (DENGAN GAMBAR & DESKRIPSI) ---------- */
+  var defaultWebs = [
+    {
+      title: "Portofolio Pribadi", 
+      desc: "Sistem web portofolio interaktif dengan antarmuka modern, sistem manajemen foto profil, serta autentikasi mode Admin dan Spectator.", 
+      url: "https://github.com/ghalihsaintGit",
+      imgUrl: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=600&q=80"
+    }
+  ];
+  var webs = JSON.parse(localStorage.getItem('profile_webs')) || defaultWebs;
+  var webGrid = document.getElementById('webGrid');
+  var webModal = document.getElementById('webModal');
+
+  function renderWebs(){
+    webGrid.innerHTML = '';
+    webs.forEach(function(w, i){
+      var card = document.createElement('div');
+      card.className = 'web-card';
+      var imageHtml = w.imgUrl ? '<img src="' + escapeHtml(w.imgUrl) + '" class="web-img" alt="' + escapeHtml(w.title) + '">' : '';
+      card.innerHTML =
+        '<button class="card-delete-btn" data-del-web="' + i + '" title="Hapus Proyek"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M18 6L6 18M6 6l12 12"/></svg></button>' +
+        imageHtml +
+        '<div class="web-content">' +
+          '<div>' +
+            '<h3>' + escapeHtml(w.title) + '</h3>' +
+            '<p>' + escapeHtml(w.desc) + '</p>' +
+          '</div>' +
+          '<a href="' + escapeHtml(w.url) + '" target="_blank" rel="noopener" class="web-link">' +
+            'Buka Situs <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>' +
+          '</a>' +
+        '</div>';
+      webGrid.appendChild(card);
+    });
+
+    webGrid.querySelectorAll('[data-del-web]').forEach(function(btn){
+      btn.addEventListener('click', function(e){
+        e.stopPropagation();
+        var index = +btn.dataset.delWeb;
+        if(confirm('Hapus proyek "' + webs[index].title + '"?')){
+          webs.splice(index, 1);
+          localStorage.setItem('profile_webs', JSON.stringify(webs));
+          renderWebs();
+        }
+      });
+    });
+  }
+
+  document.getElementById('addWebBtn').addEventListener('click', function(){
+    document.getElementById('webTitleInput').value = '';
+    document.getElementById('webDescInput').value = '';
+    document.getElementById('webUrlInput').value = '';
+    document.getElementById('webFileInput').value = '';
+    webModal.classList.add('show');
+  });
+  document.getElementById('webModalCancel').addEventListener('click', function(){ webModal.classList.remove('show'); });
+  document.getElementById('webModalConfirm').addEventListener('click', function(){
+    var t = document.getElementById('webTitleInput').value.trim();
+    var d = document.getElementById('webDescInput').value.trim();
+    var u = document.getElementById('webUrlInput').value.trim();
+    var fileInput = document.getElementById('webFileInput');
+
+    if(!t || !u) return alert('Judul dan URL Web tidak boleh kosong!');
+
+    var saveWebItem = function(imgDataUrl){
+      webs.push({title: t, desc: d, url: u, imgUrl: imgDataUrl || ''});
+      try {
+        localStorage.setItem('profile_webs', JSON.stringify(webs));
+      } catch (err) {
+        alert("Peringatan: Gambar terlalu besar untuk disimpan. Disarankan gunakan gambar berukuran lebih kecil.");
+      }
+      renderWebs(); 
+      webModal.classList.remove('show');
+    };
+
+    if(fileInput.files && fileInput.files[0]){
+      var reader = new FileReader();
+      reader.onload = function(ev){ saveWebItem(ev.target.result); };
+      reader.readAsDataURL(fileInput.files[0]);
+    } else {
+      saveWebItem('');
+    }
+  });
+
+  /* ---------- 3. MANAJEMEN GALERI GAMBAR (DENGAN DESKRIPSI TEKS) ---------- */
+  var gallery = JSON.parse(localStorage.getItem('profile_gallery')) || [];
+  var galleryGrid = document.getElementById('galleryGrid');
+  var galleryModal = document.getElementById('galleryModal');
+
+  function renderGallery(){
+    galleryGrid.innerHTML = '';
+    if(gallery.length === 0){
+      galleryGrid.innerHTML = '<p style="color:var(--dim); font-size:13px; grid-column:1/-1;">Belum ada gambar karya yang diunggah.</p>';
+      return;
+    }
+    gallery.forEach(function(g, i){
+      var card = document.createElement('div');
+      card.className = 'gallery-card';
+      var descHtml = g.desc ? '<p class="gallery-desc">' + escapeHtml(g.desc) + '</p>' : '';
+      card.innerHTML =
+        '<button class="card-delete-btn" data-del-gal="' + i + '" title="Hapus Gambar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M18 6L6 18M6 6l12 12"/></svg></button>' +
+        '<img src="' + g.dataUrl + '" alt="' + escapeHtml(g.title) + '">' +
+        '<div class="gallery-info">' +
+          '<h4 class="gallery-title">' + escapeHtml(g.title) + '</h4>' +
+          descHtml +
+        '</div>';
+      galleryGrid.appendChild(card);
+    });
+
+    galleryGrid.querySelectorAll('[data-del-gal]').forEach(function(btn){
+      btn.addEventListener('click', function(e){
+        e.stopPropagation();
+        var index = +btn.dataset.delGal;
+        if(confirm('Hapus gambar "' + gallery[index].title + '"?')){
+          gallery.splice(index, 1);
+          localStorage.setItem('profile_gallery', JSON.stringify(gallery));
+          renderGallery();
+        }
+      });
+    });
+  }
+
+  document.getElementById('addGalleryBtn').addEventListener('click', function(){
+    document.getElementById('galleryTitleInput').value = '';
+    document.getElementById('galleryDescInput').value = '';
+    document.getElementById('galleryFileInput').value = '';
+    galleryModal.classList.add('show');
+  });
+  document.getElementById('galleryModalCancel').addEventListener('click', function(){ galleryModal.classList.remove('show'); });
+  document.getElementById('galleryModalConfirm').addEventListener('click', function(){
+    var t = document.getElementById('galleryTitleInput').value.trim() || 'Karya Tanpa Judul';
+    var d = document.getElementById('galleryDescInput').value.trim();
+    var fileInput = document.getElementById('galleryFileInput');
+    if(!fileInput.files || !fileInput.files[0]) return alert('Pilih berkas gambar terlebih dahulu!');
+
+    var reader = new FileReader();
+    reader.onload = function(ev){
+      gallery.push({title: t, desc: d, dataUrl: ev.target.result});
+      try {
+        localStorage.setItem('profile_gallery', JSON.stringify(gallery));
+      } catch (err) {
+        alert("Gagal menyimpan gambar (Ukuran file terlalu besar untuk LocalStorage). Gunakan gambar dengan kompresi kecil.");
+      }
+      renderGallery();
+      galleryModal.classList.remove('show');
+    };
+    reader.readAsDataURL(fileInput.files[0]);
+  });
 
   /* ---------- View switching ---------- */
   var viewHome = document.getElementById('view-home');
@@ -1010,6 +1257,11 @@ footer .stamp{color:var(--neon-bright);}
       console.error("Gagal menyimpan foto:", e);
     }
   }
+
+  // Render Awal Semua Data
+  renderSkills();
+  renderWebs();
+  renderGallery();
 })();
 </script>
 
